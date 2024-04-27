@@ -1,10 +1,11 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import "./Clientes.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-// import { get, remove } from "../../services/clientes";
 import ModalAdd from "../../components/Clientes/modalAdd";
+import { AlertBasic, AlertConfirm } from "../../components/Alert";
+import { get, remove } from "../../services/clientes";
 // import ModalEdit from "../../components/Clientes/modalEdit";
-// import { AlertBasic, AlertConfirm } from "../../components/Alert";
+
 
 
 function Clientes() {
@@ -14,16 +15,16 @@ function Clientes() {
   const [visibleModal, setVisibleModal] = useState(false);
   const [visibleEditar, setVisibleEditar] = useState(false);
 
-  // useEffect(() => {
-  //   getData();
-  // }, []);
+  useEffect(() => {
+    getData();
+  }, []);
 
-  // const getData = async () => {
-  //   let result = await get();
-  //   if (result.status === 200) {
-  //     setData(result.data);
-  //   }
-  // };
+  const getData = async () => {
+    let result = await get();
+    if (result.status === 200) {
+      setData(result.data);
+    }
+  };
 
   const openModal = () => {
     setVisibleModal(!visibleModal);
@@ -35,21 +36,16 @@ function Clientes() {
     setVisibleEditar(!visibleModal);
   };
 
-  // const removeMc = async (id) => {
-  //   const response = await AlertConfirm('Exclusão', 'Tem certeza que deseja excluir esta mercadoria, id: ' + id + ".", 'question')
-  //   if(response.isConfirmed){
-  //     const result = await remove(id);
-  //     if (result.status === 200) {
-  //       updateTabela(id);
-  //       AlertBasic("Exclusão", "Mercadoria excluída com sucesso.", "success");
-  //     }
-  //   };
-  // };
-
-  // const updateTabela = (id) => {
-  //   var dataUpdate = data.filter((x) => x.id !== id);
-  //   setData(dataUpdate);
-  // };
+  const removeCliente = async (id) => {
+    const response = await AlertConfirm('Exclusão', 'Tem certeza que deseja excluir este cliente, id: ' + id + ".", 'question')
+    if(response.isConfirmed){
+      const result = await remove(id);
+      if (result.status === 200) {
+        getData();
+        AlertBasic("Exclusão", "Cliente excluído com sucesso.", "success");
+      }
+    };
+  };
 
   return (
     <div className="container-sm container">
@@ -81,22 +77,28 @@ function Clientes() {
             <th>Nº</th>
             <th>Cidade</th>
             <th>Estado</th>
+            <th>Ação</th>
           </tr>
         </thead>
-        {/* <tbody>
-          {data.map((mc) => (
-            <tr key={mc.id}>
-              <td>{mc.id}</td>
-              <td>{mc.name}</td>
-              <td>{mc.registerNumber}</td>
-              <td>{mc.manufacturer}</td>
-              <td>{mc.type}</td>
-              <td>{mc.description}</td>
+        <tbody>
+          {data.map((cl) => (
+            <tr key={cl.clienteId}>
+              <td>{cl.clienteId}</td>
+              <td>{cl.nome}</td>
+              <td>{cl.cpf}</td>
+              <td>{cl.rg}</td>
+              <td>{cl.dataNascimento}</td>
+              <td>{cl.ocupacao}</td>
+              <td>{cl.email}</td>
+              <td>{cl.endereco.logradouro}</td>
+              <td>{cl.endereco.numero}</td>
+              <td>{cl.endereco.cidade}</td>
+              <td>{cl.endereco.estado}</td>
               <td>
                 <button
                   className="btn btn-primary"
                   onClick={() => {
-                    openModalEdit(mc.id);
+                    openModalEdit(cl.clienteId);
                   }}
                 >
                   Editar
@@ -104,7 +106,7 @@ function Clientes() {
                 <button
                   className="btn btn-danger"
                   onClick={() => {
-                    removeMc(mc.id);
+                    removeCliente(cl.clienteId);
                   }}
                 >
                   Excluir
@@ -112,7 +114,7 @@ function Clientes() {
               </td>
             </tr>
           ))}
-        </tbody> */}
+        </tbody>
       </table>
       <ModalAdd
         visible={visibleModal}
