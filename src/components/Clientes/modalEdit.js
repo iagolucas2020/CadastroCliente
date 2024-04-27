@@ -1,63 +1,86 @@
 import { useEffect, useState } from "react";
 import { Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
-import { put } from "../../services/merchandise";
+import { put } from "../../services/clientes";
 import { AlertBasic } from "../Alert";
-import './Modal.css'
+import "./Modal.css";
 
 function ModalEdit(props) {
+  const [id, setId] = useState("");
+  const [endId, setEndId] = useState("");
+  const [nome, setNome] = useState("");
+  const [cpf, setCpf] = useState("");
+  const [rg, setRg] = useState("");
+  const [dataNascimento, setDataNascimento] = useState("");
+  const [ocupacao, setOcupacao] = useState("");
+  const [email, setEmail] = useState("");
+  const [logradouro, setLogradouro] = useState("");
+  const [numero, setNumero] = useState("");
+  const [cidade, setCidade] = useState("");
+  const [estado, setEstado] = useState("");
 
-  const [id, setId] = useState('');
-  const [name, setName] = useState('');
-  const [registerNumber, setRegisterNumber] = useState('');
-  const [manufacturer, setManufacturer] = useState('');
-  const [type, setType] = useState('');
-  const [description, setDescription] = useState('');
-
-  const putMc = async () => {
+  const putCliente = async () => {
     let obj = {
-      id: id,
-      name: name,
-      registerNumber: registerNumber,
-      manufacturer: manufacturer,
-      type: type,
-      description: description,
+      clienteId: id,
+      nome: nome,
+      cpf: cpf,
+      rg: rg,
+      dataNascimento: dataNascimento,
+      ocupacao: ocupacao,
+      email: email,
+      dataCadastro: new Date(),
+      enderecoId: endId,
+      endereco: {
+        logradouro: logradouro,
+        numero: numero,
+        cidade: cidade,
+        estado: estado,
+      },
     };
 
-    if(!checkInput(obj))
-      return;
+    if (!checkInput(obj)) return;
 
     var result = await put(id, obj);
     console.log(result);
     if (result.status === 200) {
       props.func();
       props.funcUpdate();
-      AlertBasic('Atualizar', 'Mercadoria atualizada com sucesso', 'success');
+      AlertBasic("Atualizar", "Cliente atualizado com sucesso", "success");
     }
-
   };
 
-  const setData = () => {
-    const response = props;
-    setId(response.obj.id);
-    setName(response.obj.name);
-    setRegisterNumber(response.obj.registerNumber);
-    setManufacturer(response.obj.manufacturer);
-    setType(response.obj.type);
-    setDescription(response.obj.description);
-  }
+  const setData = async () => {
+    const response = props.obj;
+    const endereco = await props.obj.endereco;
+    setId(response.clienteId);
+    setNome(response.nome);
+    setCpf(response.cpf);
+    setRg(response.rg);
+    setDataNascimento(new Date(response.dataNascimento));
+    setOcupacao(response.ocupacao);
+    setEmail(response.email);
+    setEndId(endereco.enderecoId);
+    setLogradouro(endereco.logradouro);
+    setNumero(endereco.numero);
+    setCidade(endereco.cidade);
+    setEstado(endereco.estado);
+  };
 
   const checkInput = (obj) => {
     for (var prop in obj) {
-      if(obj[prop] === ''){
-        AlertBasic("Atenção", "Preencher todos os campos para atualizar a mercadoria.", "error");
+      if (obj[prop] === "") {
+        AlertBasic(
+          "Atenção",
+          "Preencher todos os campos para atualizar a mercadoria.",
+          "error"
+        );
         return false;
-      } ;
+      }
     }
     return true;
   };
 
   useEffect(() => {
-    setData();
+    if (props.visible) setData();
   }, [props]);
 
   return (
@@ -65,72 +88,134 @@ function ModalEdit(props) {
       <ModalHeader className="modalHeader"> Editar Mercadorias </ModalHeader>
       <ModalBody>
         <div className="form-group">
-          <label>Código:</label>
-          <br />
-          <input
-            type="text"
-            className="form-control"
-            name="name"
-            disabled={true}
-            value={id}
-          />
-          <label>Nome:</label>
-          <br />
-          <input
-            type="text"
-            className="form-control"
-            name="name"
-            onChange={(e) => setName(e.target.value)}
-            value={name}
-          />
-          <br />
-          <label>Número de Registro:</label>
-          <br />
-          <input
-            type="number"
-            className="form-control"
-            name="registerNumber"
-            onChange={(e) => setRegisterNumber(e.target.value)}
-            value={registerNumber}
-          />
-          <br />
-          <label>Fabricante:</label>
-          <br />
-          <input
-            type="text"
-            className="form-control"
-            name="manufacturer"
-            onChange={(e) => setManufacturer(e.target.value)}
-            value={manufacturer}
-          />
-          <br />
-          <label>Tipo:</label>
-          <br />
-          <input
-            type="text"
-            className="form-control"
-            name="type"
-            onChange={(e) => setType(e.target.value)}
-            value={type}
-          />
-          <br />
-          <label>Descrição:</label>
-          <br />
-          <textarea
-            type="text"
-            className="form-control"
-            name="description"
-            onChange={(e) => setDescription(e.target.value)}
-            value={description}
-          ></textarea>
-          <br />
+          <div className="row">
+            <div class="form-group col-sm-3">
+              <label>ID:</label>
+              <input
+                type="text"
+                className="form-control"
+                name="nome"
+                disabled={true}
+                onChange={(e) => setId(e.target.value)}
+                value={id}
+              />
+            </div>
+            <div class="form-group col-sm-9">
+              <label>Nome:</label>
+              <input
+                type="text"
+                className="form-control"
+                name="nome"
+                onChange={(e) => setNome(e.target.value)}
+                value={nome}
+              />
+            </div>
+          </div>
+          <div className="row">
+            <div class="form-group col-sm-4">
+              <label>CPF</label>
+              <input
+                type="text"
+                className="form-control"
+                name="cpf"
+                onChange={(e) => setCpf(e.target.value)}
+                value={cpf}
+              />
+            </div>
+            <div class="form-group col-sm-4">
+              <label>RG:</label>
+              <input
+                type="text"
+                className="form-control"
+                name="rg"
+                onChange={(e) => setRg(e.target.value)}
+                value={rg}
+              />
+            </div>
+            <div class="form-group col-sm-4">
+              <label>Nascimento:</label>
+              <input
+                type="date"
+                className="form-control"
+                name="dataNascimento"
+                onChange={(e) => setDataNascimento(e.target.value)}
+                value={dataNascimento}
+              />
+            </div>
+          </div>
+          <div className="row">
+            <div class="form-group col-sm-4">
+              <label>Ocupação</label>
+              <input
+                type="text"
+                className="form-control"
+                name="ocupacao"
+                onChange={(e) => setOcupacao(e.target.value)}
+                value={ocupacao}
+              />
+            </div>
+            <div class="form-group col-sm-8">
+              <label>E-mail:</label>
+              <input
+                type="text"
+                className="form-control"
+                name="email"
+                onChange={(e) => setEmail(e.target.value)}
+                value={email}
+              />
+            </div>
+          </div>
+          <div className="row">
+            <div class="form-group col-sm-9">
+              <label>Logradouro</label>
+              <input
+                type="text"
+                className="form-control"
+                name="logradouro"
+                onChange={(e) => setLogradouro(e.target.value)}
+                value={logradouro}
+              />
+            </div>
+            <div class="form-group col-sm-3">
+              <label>Nº:</label>
+              <input
+                type="text"
+                className="form-control"
+                name="numero"
+                onChange={(e) => setNumero(e.target.value)}
+                value={numero}
+              />
+            </div>
+          </div>
+          <div className="row">
+            <div class="form-group col-sm-9">
+              <label>Cidade</label>
+              <input
+                type="text"
+                className="form-control"
+                name="cidade"
+                onChange={(e) => setCidade(e.target.value)}
+                value={cidade}
+              />
+            </div>
+            <div class="form-group col-sm-3">
+              <label>Estado:</label>
+              <input
+                type="text"
+                className="form-control"
+                name="estado"
+                onChange={(e) => setEstado(e.target.value)}
+                value={estado}
+              />
+            </div>
+          </div>
         </div>
       </ModalBody>
       <ModalFooter className="modalFooter">
         <button
           className="btn btn-primary"
           onClick={() => {
-            putMc();
+            putCliente();
           }}
         >
           Editar

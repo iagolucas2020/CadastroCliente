@@ -6,12 +6,16 @@ import "./Modal.css";
 
 function ModalAdd(props) {
   const [data, setData] = useState({
-    id: "",
-    name: "",
-    registerNumber: "",
-    manufacturer: "",
-    type: "",
-    description: "",
+    nome: "",
+    cpf: "",
+    rg: "",
+    dataNascimento: "",
+    ocupacao: "",
+    email: "",
+    logradouro: "",
+    numero: "",
+    cidade: "",
+    estado: "",
   });
 
   const handleChange = (e) => {
@@ -42,12 +46,11 @@ function ModalAdd(props) {
     if (!checkInput(obj)) return;
 
     const result = await post(obj);
-    console.log(result);
     if (result.status === 201) {
       clear();
-      // props.func();
-      // props.funcUpdate();
-      AlertBasic("Cadastro", "Cliente Cadastrado com sucesso", "success");
+      props.func();
+      props.funcUpdate();
+      AlertBasic("Cadastro", "Cliente Cadastrada com sucesso", "success");
     }
   };
 

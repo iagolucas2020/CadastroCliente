@@ -4,7 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import ModalAdd from "../../components/Clientes/modalAdd";
 import { AlertBasic, AlertConfirm } from "../../components/Alert";
 import { get, remove } from "../../services/clientes";
-// import ModalEdit from "../../components/Clientes/modalEdit";
+import ModalEdit from "../../components/Clientes/modalEdit";
 
 
 
@@ -31,7 +31,7 @@ function Clientes() {
   };
 
   const openModalEdit = (id) => {
-    var obj = data.filter((x) => x.id === id)[0];
+    var obj = data.filter((x) => x.clienteId === id)[0];
     setDataEdit(obj);
     setVisibleEditar(!visibleModal);
   };
@@ -121,11 +121,11 @@ function Clientes() {
         func={() => {
           setVisibleModal(!visibleModal);
         }}
-        // funcUpdate={() => {
-        //   getData();
-        // }}
+        funcUpdate={() => {
+          getData();
+        }}
       />
-      {/* <ModalEdit
+      <ModalEdit
         visible={visibleEditar}
         obj={dataEdit}
         func={() => {
@@ -134,7 +134,7 @@ function Clientes() {
         funcUpdate={() => {
           getData();
         }}
-      /> */}
+      />
     </div>
   );
 }
