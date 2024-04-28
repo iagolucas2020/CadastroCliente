@@ -3,6 +3,8 @@ import { Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 import { put } from "../../services/clientes";
 import { AlertBasic } from "../Alert";
 import "./Modal.css";
+import { estados } from "../../global/jsFunctions/estados";
+import moment from "moment";
 
 function ModalEdit(props) {
   const [id, setId] = useState("");
@@ -55,7 +57,7 @@ function ModalEdit(props) {
     setNome(response.nome);
     setCpf(response.cpf);
     setRg(response.rg);
-    setDataNascimento(new Date(response.dataNascimento));
+    setDataNascimento(moment(response.dataNascimento).format('yyyy-MM-DD'));
     setOcupacao(response.ocupacao);
     setEmail(response.email);
     setEndId(endereco.enderecoId);
@@ -135,6 +137,7 @@ function ModalEdit(props) {
             <div class="form-group col-sm-4">
               <label>Nascimento:</label>
               <input
+                id="dataNascimento"
                 type="date"
                 className="form-control"
                 name="dataNascimento"
@@ -200,13 +203,17 @@ function ModalEdit(props) {
             </div>
             <div class="form-group col-sm-3">
               <label>Estado:</label>
-              <input
+              <select
                 type="text"
                 className="form-control"
                 name="estado"
                 onChange={(e) => setEstado(e.target.value)}
                 value={estado}
-              />
+              >
+                {estados.map((uf) => (
+                  <option value={uf}>{uf}</option>
+                ))}
+              </select>
             </div>
           </div>
         </div>

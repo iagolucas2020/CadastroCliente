@@ -3,6 +3,7 @@ import { Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 import { post } from "../../services/clientes";
 import { AlertBasic } from "../Alert";
 import "./Modal.css";
+import { estados } from "../../global/jsFunctions/estados.js";
 
 function ModalAdd(props) {
   const [data, setData] = useState({
@@ -181,12 +182,16 @@ function ModalAdd(props) {
             </div>
             <div class="form-group col-sm-3">
               <label>Estado:</label>
-              <input
+              <select
                 type="text"
                 className="form-control"
                 name="estado"
                 onChange={handleChange}
-              />
+              >
+                {estados.map((uf) => (
+                  <option value={uf}>{uf}</option>
+                ))}
+              </select>
             </div>
           </div>
         </div>
