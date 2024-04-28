@@ -87,7 +87,7 @@ function ModalEdit(props) {
 
   return (
     <Modal isOpen={props.visible}>
-      <ModalHeader className="modalHeader"> Editar Mercadorias </ModalHeader>
+      <ModalHeader className="modalHeader"> Editar Cliente </ModalHeader>
       <ModalBody>
         <div className="form-group">
           <div className="row">
